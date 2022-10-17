@@ -1,49 +1,121 @@
-
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png" />
-    <SignInForm email="email" password="password" @handleFormChange="handleFormChange" @handleSubmit="handleSubmit"/>
-    <!-- <div class="form-container">
-      <form @submit="handleSubmit">
-        <input
-          placeholder="Email"
-          :value="email"
-          name="email"
-          type="email"
-          v-on:input="handleFormChange"
-        />
-        <input
-          placeholder="Password"
-          :value="password"
-          name="password"
-          type="password"
-        />
-        <button>Log In</button>
-      </form>
-    </div> -->
+    <div class="flex-row buttons">
+      <button class="flex-item" v-for="choice in playerChoices" :key="choice.id" :disabled="playerChoice" @click="selectChoice(choice)">
+        <img v-bind:src = 'choice.image' v-bind:alt = 'choice.label'/>
+        <h4>{{choice.label}}</h4>
+      </button>
+    </div>
+    <button class="flex-item" @click="resetGame()">Reset</button>
   </div>
 </template>
 
 <script>
-import './styles/app.css'
-import SignInForm from './components/SignInForm.vue'
+import choices from './choices'
 export default {
   name: 'App',
-  components: { SignInForm },
+  components: {},
   data: () => ({
-    email: '',
-    password: ''
-  }),
+    playerChoices:choices,
+    playerChoice:null,
+    compChoice:null,
+    winner:String}),
   methods: {
-    handleFormChange(name,value) {
-      this[name] = value
+    selectChoice(choice) {
+      this.playerChoice = choice
+      const num = Math.ceil(Math.random()*3 - 1)
+      console.log(num)
+      this.compChoice = this.playerChoices[num]
+      this.checkWinner()
     },
-    handleSubmit(e) {
-      e.preventDefault()
-      alert('form submitted')
-      this.email=""
-      this.password=""
+    checkWinner() {
+      if(this.playerChoice.value === this.compChoice.value){
+        this.winner='Draw!'
+      }else if(this.playerChoice.value === 'paper' && this.compChoice.value === "rock"){
+        this.winner='Player Won!'
+      }else if(this.playerChoice.value === 'rock' && this.compChoice.value === "scissor"){
+        this.winner='Player Won!'
+      }else if(this.playerChoice.value === 'scissor' && this.compChoice.value === "paper"){
+        this.winner='Player Won!'
+      }else if(this.compChoice.value === 'paper' && this.playerChoice.value === "rock"){
+        this.winner='Computer Won!'
+      }else if(this.compChoice.value === 'rock' && this.playerChoice.value === "scissor"){
+        this.winner='Computer Won!'
+      }else if(this.compChoice.value === 'scissor' && this.playerChoice.value === "paper"){
+        this.winner='Computer Won!'
+      }
+    },
+    resetGame() {
+      this.playerChoice=null
+      this.compChoice=null
+      this.winner=''
     }
   }
-}
+  }
+
 </script>
+
+<style>
+html {
+  background-color: #383838;
+}
+#app {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  margin-top: 60px;
+  color: #f4f6f9;
+}
+.flex-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.flex-item {
+  padding: 1em;
+  max-height: 12em;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #303030;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0);
+  color: #f4f6f9;
+}
+button {
+  border: 0;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+button:disabled {
+  cursor: not-allowed;
+}
+button:hover:not(:disabled) {
+  opacity: 0.8;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+.flex-item img {
+  width: 250px;
+  max-height: 8em;
+  align-content: center;
+  object-fit: contain;
+}
+.winner-circle {
+  margin-top: 2em;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 1em;
+  border-radius: 4px;
+}
+.winner-circle button {
+  padding: 1em 2em;
+  border-radius: 4px;
+  border: 0;
+  background-color: #ffcc00;
+  font-weight: 700;
+}
+.winner-circle button:hover {
+  border: 0;
+}
+</style>
