@@ -7,6 +7,19 @@
       </button>
     </div>
     <button class="flex-item" @click="resetGame()">Reset</button>
+    <div class="winner-circle flex-row" v-if="winner">
+      {{winner}}
+      <div class="flex-item " v-if="winner">
+        Player:
+        <img v-bind:src = 'playerChoice.image' v-bind:alt = 'playerChoice.label'/>
+        <h4>{{playerChoice.label}}</h4>
+      </div>
+      <div class="flex-item " v-if="winner">
+        Computer:
+        <img v-bind:src = 'compChoice.image' v-bind:alt = 'compChoice.label'/>
+        <h4>{{compChoice.label}}</h4>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -19,7 +32,7 @@ export default {
     playerChoices:choices,
     playerChoice:null,
     compChoice:null,
-    winner:String}),
+    winner:null}),
   methods: {
     selectChoice(choice) {
       this.playerChoice = choice
